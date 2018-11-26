@@ -6,20 +6,35 @@ function setup() {
 }
 function draw() { 
       //noprotect 
-      background(0); 
+      noLoop();
       
-			noLoop();
-      
+      background(color(0, 150, 150)); 
+      let r, g, b, dx, dy, d; 
       for(y=0; y<height; y++){ 
         for(x=0; x<width; x++) { 
-
-          dx = x - width/2; 
-          dy = y - height/2; 
-          d = sqrt(dx*dx+dy*dy); 
-
-          set(x, y, color(255 - d, d, (x + y) / (width + height) * 255)); 
+        //grass
+        if(y > 400){
+          set(x, y, color(0, 150, 0));
+        }
+        //walls
+        if((x > 250 && x < 550) && (y < 400 && y > 200))
+        	set(x, y, color(75, 0, 0));
+         
+          
         } 
-      } 
+      }
+      
+      //flowers
+      for(i=400; i<1000; i++){ 
+        		set(floor(random(0, 800)), floor(random(400, 600)), color(random(0, 255), random(0, 255), 								random(0, 255)));
+      }
+      
+      //roof
+      for(y=50,w=0; y<=200; y++,w+=2)
+      	for(x=width/2-w; x<=width/2+w; x++){
+        	set(x, y, color(75, 0, 75));
+        }
+      
       updatePixels(); 
     }
 </script>
