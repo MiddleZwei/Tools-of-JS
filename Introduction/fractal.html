@@ -1,0 +1,51 @@
+<script src="//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/p5.js"></script>
+
+<script>
+function setup() {
+	createCanvas(800,600);
+}
+function draw() { 
+      //noprotect 
+      noLoop();
+      
+      background(0); 
+      
+      x1 = width/2; y1 = 50;
+      x2 = width/5; y2 = 400;
+      x3 = 4*width/5; y3 = 400;
+      
+      set(x1, y1, color(255));
+      set(x2, y2, color(255));
+      set(x3, y3, color(255));
+      
+      cx = x1; cy = y1;
+      
+      for(cca = 0; cca < 30000; cca++){
+      	v = floor(random(0, 3));
+        switch(v){
+        	case 0: 
+          	cx = (cx + x1)/2; 
+            cy = (cy + y1)/2;
+            set(cx, cy, color(255));
+            break;
+          case 1: 
+          	cx = (cx + x2)/2; 
+            cy = (cy + y2)/2;
+            set(cx, cy, color(255));
+            break;
+          default:
+          	cx = (cx + x3)/2; 
+            cy = (cy + y3)/2;
+            set(cx, cy, color(255));
+            break;
+          	
+          	
+        }
+      }
+      
+      
+      
+      updatePixels(); 
+    }
+</script>
+
