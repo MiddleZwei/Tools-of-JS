@@ -8,17 +8,6 @@
 
 <body>
 
-
-
-  <!-- <form>
-  X:<br>
-  <input type="text" name="X"><br>
-  Y:<br>
-  <input type="text" name="Y"><br>
-  Angle:<br>
-  <input type="text" name="Angle">
-</form><br> -->
-
   <button onclick="show()">Show</button>
   <button onclick="reset()">Reset</button>
   <button onclick="apply()">Apply</button>
@@ -31,8 +20,9 @@
   <script type="text/javascript">
     var imgA;
     var imgB;
-    var vec;
+    var vec = [];
     var currentMatrix = makeIdentity();
+    var sequence = [];
     var consequentMatrices = [];
 
     function setup() {
@@ -80,7 +70,11 @@
 
     function mouseDragged() {
       vec = makeVector(mouseX, mouseY);
+      sequence = sequence.concat([vec]);
       drawVector(imgA, vec);
+
+
+      //console.log(sequence);
       /* console.log(scaled1);
       // scaling + rotation + shift
       var scaled2 = matrixMultiply(makeScaling(2, 2), makeIdentity());
@@ -89,13 +83,9 @@
       drawVector(imgB, multiply(shifted2, vec));
       console.log(shifted2);  */
 
-      drawVector(imgB, multiply(currentMatrix, vec));
+      //drawVector(imgB, multiply(currentMatrix, vec));
 
     }
-
-
-
-
 
 
     function makeIdentity() {
@@ -151,12 +141,6 @@
           w[i] += M[i][j] * v[j];
         }
       }
-
-      /* console.log(M);
-      console.log(v);
-      console.log(w);
-      console.log('---------');
-       */
       return w;
 
     }
@@ -168,10 +152,6 @@
       for (var i = 0; i < B.length; i++) {
         o[i] = multiply(A, B[i]);
       }
-
-      /* console.log(o);
-      console.log('----'); */
-
       return o;
 
     }
@@ -202,18 +182,14 @@
 
         }
       }
-
-
-
-
-
-
-
     }
 
     function reset() {
       currentMatrix = makeIdentity();
+      return 0;
+    }
 
+    function clearViewB() {
       imgA.loadPixels();
       imgB.loadPixels();
       var d = pixelDensity();
@@ -240,11 +216,9 @@
       }
       imgA.updatePixels();
       imgB.updatePixels();
-
-      return 0;
     }
 
-    function showXYFields() {
+    function showXYFields(id) {
 
       var exists = document.getElementById('removeInputsFlag');
 
@@ -260,10 +234,12 @@
         var iX = document.createElement("input");
         iX.setAttribute('type', "text");
         iX.setAttribute('name', "X");
+        iX.setAttribute('value', 0);
 
         var iY = document.createElement("input");
         iY.setAttribute('type', "text");
         iY.setAttribute('name', "Y");
+        iY.setAttribute('value', 0);
 
         f.appendChild(iX);
         f.appendChild(iY);
@@ -272,15 +248,35 @@
 
         var submit = document.createElement("BUTTON");
         var tSumbit = document.createTextNode("Submit");
-        submit.setAttribute('type', "submit");
+        submit.setAttribute('id', "submit");
         submit.appendChild(tSumbit);
         document.getElementById('removeInputsFlag').appendChild(submit);
+
+
+        submit.addEventListener("click", function() {
+          /* console.log('submitted'); */
+          /* console.log(iY.value); */
+          /* console.log(id); */
+          if (id == 'translate') {
+            currentMatrix = matrixMultiply(makeTranslate(iX.value, iY.value), currentMatrix);
+          } else if (id == 'scale') {
+            currentMatrix = matrixMultiply(makeScaling(iX.value, iY.value), currentMatrix);
+          } else if (id == 'shear') {
+            currentMatrix = matrixMultiply(makeShear(iX.value, iY.value), currentMatrix);
+          }
+
+          for (let vec = 0; vec < sequence.length; vec++) {
+            drawVector(imgB, multiply(currentMatrix, sequence[vec]));
+
+          }
+
+        });
       }
 
 
     }
 
-    function showAlphaFields() {
+    function showAlphaFields(id) {
       var exists = document.getElementById('removeInputsFlag');
 
       if (exists) {
@@ -306,8 +302,22 @@
         submit.setAttribute('type', "submit");
         submit.appendChild(tSumbit);
         document.getElementById('removeInputsFlag').appendChild(submit);
-      }
 
+        submit.addEventListener("click", function() {
+          /* console.log('submitted'); */
+          /* console.log(iY.value); */
+          /* console.log(id); */
+          if (id == 'rotation') {
+            currentMatrix = matrixMultiply(makeRotation(i.value), currentMatrix);
+          }
+
+          for (let vec = 0; vec < sequence.length; vec++) {
+            drawVector(imgB, multiply(currentMatrix, sequence[vec]));
+
+          }
+
+        });
+      }
 
     }
 
@@ -336,11 +346,19 @@
         var tTranslate = document.createTextNode("Translate");
         var tIdentity = document.createTextNode("Identity");
 
+        identity.setAttribute('id', "identity");
+        translate.setAttribute('id', "translate");
+        scale.setAttribute('id', "scale");
+        rotation.setAttribute('id', "rotation");
+        shear.setAttribute('id', "shear");
+
         identity.setAttribute('onclick', "");
-        translate.setAttribute('onclick', "showXYFields()");
-        scale.setAttribute('onclick', "showXYFields()");
-        rotation.setAttribute('onclick', "showAlphaFields()");
-        shear.setAttribute('onclick', "showXYFields()");
+        translate.setAttribute('onclick', "showXYFields(this.id)");
+        scale.setAttribute('onclick', "showXYFields(this.id)");
+        rotation.setAttribute('onclick', "showAlphaFields(this.id)");
+        shear.setAttribute('onclick', "showXYFields(this.id)");
+
+
 
         identity.appendChild(tIdentity);
         translate.appendChild(tTranslate);
@@ -354,11 +372,6 @@
         document.getElementById('removeMatricesFlag').appendChild(rotation);
         document.getElementById('removeMatricesFlag').appendChild(shear);
       }
-
-
-
-
-
     }
 
     // TODO
