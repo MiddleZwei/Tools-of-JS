@@ -39,7 +39,6 @@
         imgA.pixels[i + 1] = 250;
         imgA.pixels[i + 2] = 240;
         imgA.pixels[i + 3] = 255;
-
         imgB.pixels[i] = 240;
         imgB.pixels[i + 1] = 240;
         imgB.pixels[i + 2] = 250;
@@ -47,7 +46,6 @@
       }
       imgA.updatePixels();
       imgB.updatePixels();
-
     }
 
     function draw() {
@@ -74,8 +72,6 @@
       sequence = sequence.concat([vec]);
       drawVector(imgA, vec);
     }
-
-
 
     function makeIdentity() {
       return [
@@ -118,13 +114,8 @@
       ];
     }
 
-
-
-
     function multiply(M, v) {
-
       var w = [0, 0, 0];
-
       for (var i = 0; i < M.length; i++) {
         for (var j = 0; j < M[i].length; j++) {
           w[i] += M[i][j] * v[j];
@@ -134,34 +125,26 @@
     }
 
     function matrixMultiply(A, B) {
-
       var o = [];
-
       for (var i = 0; i < B.length; i++) {
         o[i] = multiply(A, B[i]);
       }
       return o;
     }
 
-
-
-
     function show() {
-    
-      var exists = document.getElementById('removablePreFlag');
 
+      var exists = document.getElementById('removablePreFlag');
       if (exists) {
         document.getElementById('consequentMatrices').removeChild(exists);
       } else {
         var pre = document.createElement("PRE");
         pre.setAttribute('id', "removablePreFlag");
         document.getElementById('consequentMatrices').appendChild(pre);
-
         for (let i = 0; i < consequentMatrices.length; i++) {
           for (let j = 0; j < consequentMatrices[i].length; j++) {
             for (let s = 0; s < consequentMatrices[i][j].length; s++) {
               pre.innerHTML += consequentMatrices[i][j][s] + " ";
-
             }
             pre.innerHTML += "<br>";
           }
@@ -175,16 +158,16 @@
       clearViewB();
       consequentMatrices = [];
       consequentTransformations = [];
-      
+
       var existsMatrices = document.getElementById('removeMatricesFlag');
       var existsInputs = document.getElementById('removeInputsFlag');
       if (existsMatrices) {
-      	document.getElementById('inputs').removeChild(existsInputs);
+        document.getElementById('inputs').removeChild(existsInputs);
         document.getElementById('matrices').removeChild(existsMatrices);
       }
-      
+
       for (let vec = 0; vec < sequence.length; vec++) {
-            drawVector(imgB, multiply(currentMatrix, sequence[vec]));
+        drawVector(imgB, multiply(currentMatrix, sequence[vec]));
       }
     }
 
@@ -193,8 +176,7 @@
       imgB.loadPixels();
       var d = pixelDensity();
       for (var i = 0; i < 512 * 512 * 4 * d; i += 4) {
-
-				//copy imgA to imgB
+        //copy imgA to imgB
         /* if (imgA.pixels[i] == 0) {
           imgB.pixels[i] = 0;
           imgB.pixels[i + 1] = 0;
@@ -206,7 +188,7 @@
           imgB.pixels[i + 2] = 250;
           imgB.pixels[i + 3] = 255;
         } */
-        
+
         imgB.pixels[i] = 240;
         imgB.pixels[i + 1] = 240;
         imgB.pixels[i + 2] = 250;
@@ -216,184 +198,203 @@
       imgB.updatePixels();
     }
 
-    function showXYFields(id) {
-      var exists = document.getElementById('removeInputsFlag');
 
-      if (exists) {
-        document.getElementById('inputs').removeChild(exists);
-      } else {
-        var div = document.createElement("div");
-        div.setAttribute('id', "removeInputsFlag");
-        document.getElementById('inputs').appendChild(div);
-
-        var f = document.createElement("form");
-
-        var iX = document.createElement("input");
-        iX.setAttribute('type', "text");
-        iX.setAttribute('name', "X");
-        iX.setAttribute('value', 0);
-
-        var iY = document.createElement("input");
-        iY.setAttribute('type', "text");
-        iY.setAttribute('name', "Y");
-        iY.setAttribute('value', 0);
-
-        f.appendChild(iX);
-        f.appendChild(iY);
-
-        document.getElementById('removeInputsFlag').appendChild(f);
-
-        var submit = document.createElement("BUTTON");
-        var tSumbit = document.createTextNode("Submit");
-        submit.setAttribute('id', "submit");
-        submit.appendChild(tSumbit);
-        document.getElementById('removeInputsFlag').appendChild(submit);
-
-
-        submit.addEventListener("click", function(e) {
-          if (id == 'translate') {
-            currentMatrix = matrixMultiply(makeTranslate(iX.value, iY.value), currentMatrix);
-          } else if (id == 'scale') {
-            currentMatrix = matrixMultiply(makeScaling(iX.value, iY.value), currentMatrix);
-          } else if (id == 'shear') {
-            currentMatrix = matrixMultiply(makeShear(iX.value, iY.value), currentMatrix);
-          }
-          
-          consequentTransformations.push([id, [iX.value, iY.value]]);
-          consequentMatrices.push(currentMatrix);
-          
-          clearViewB();
-
-          for (let vec = 0; vec < sequence.length; vec++) {
-            drawVector(imgB, multiply(currentMatrix, sequence[vec]));
-          }
-          
-        });
-        //return [iX.value, iY.value];
-      }
-
-			
-    }
-    
     function showXYFieldsEdit(num, id, x, y, previousMatrix) {
-    	currentMatrix = previousMatrix;
-                  console.log(currentMatrix);
+      currentMatrix = previousMatrix;
       var exists = document.getElementById('removeInputsFlag');
-
       if (exists) {
         document.getElementById('inputs').removeChild(exists);
       } else {
         var div = document.createElement("div");
         div.setAttribute('id', "removeInputsFlag");
         document.getElementById('inputs').appendChild(div);
-
         var f = document.createElement("form");
-
         var iX = document.createElement("input");
         iX.setAttribute('type', "text");
         iX.setAttribute('name', "X");
         iX.setAttribute('value', x);
-
         var iY = document.createElement("input");
         iY.setAttribute('type', "text");
         iY.setAttribute('name', "Y");
         iY.setAttribute('value', y);
-
         f.appendChild(iX);
         f.appendChild(iY);
-
         document.getElementById('removeInputsFlag').appendChild(f);
-
         var submit = document.createElement("BUTTON");
         var tSumbit = document.createTextNode("Submit");
         submit.setAttribute('id', "submit");
         submit.appendChild(tSumbit);
         document.getElementById('removeInputsFlag').appendChild(submit);
-
-
         submit.addEventListener("click", function(e) {
           if (id == 'translate') {
             currentMatrix = matrixMultiply(makeTranslate(iX.value, iY.value), currentMatrix);
+            consequentMatrices[num] = currentMatrix;
+            for (let i = num + 1; i < consequentMatrices.length; i++) {
+              consequentMatrices[i] = matrixMultiply(makeTranslate(parseInt(consequentTransformations[i][1][1]), parseInt(consequentTransformations[i][1][1])), currentMatrix);
+              currentMatrix = consequentMatrices[i];
+            }
           } else if (id == 'scale') {
             currentMatrix = matrixMultiply(makeScaling(iX.value, iY.value), currentMatrix);
+            consequentMatrices[num] = currentMatrix;
+            for (let i = num + 1; i < consequentMatrices.length; i++) {
+              consequentMatrices[i] = matrixMultiply(makeScaling(parseInt(consequentTransformations[i][1][1]), parseInt(consequentTransformations[i][1][1])), currentMatrix);
+              currentMatrix = consequentMatrices[i];
+            }
           } else if (id == 'shear') {
             currentMatrix = matrixMultiply(makeShear(iX.value, iY.value), currentMatrix);
+            consequentMatrices[num] = currentMatrix;
+            for (let i = num + 1; i < consequentMatrices.length; i++) {
+              consequentMatrices[i] = matrixMultiply(makeShear(parseInt(consequentTransformations[i][1][1]), parseInt(consequentTransformations[i][1][1])), currentMatrix);
+              currentMatrix = consequentMatrices[i];
+            }
           }
-          
-          consequentMatrices[num] = currentMatrix;
-          
-          for(let i = num+1; i < consequentMatrices.length; i++){
-            consequentMatrices[i] = matrixMultiply(makeScaling(parseInt(consequentTransformations[i][1][1]), parseInt(consequentTransformations[i][1][1])), currentMatrix);
-            currentMatrix = consequentMatrices[i];
 
-          }
-          
-          
+
           clearViewB();
-          
+
           for (let vec = 0; vec < sequence.length; vec++) {
             drawVector(imgB, multiply(currentMatrix, sequence[vec]));
           }
-          
-          
-          
+
+
+
         });
       }
 
-			
     }
 
-    function showAlphaFields(id) {
+    function showAlphaFieldsEdit(num, id, a, previousMatrix) {
+      currentMatrix = previousMatrix;
       var exists = document.getElementById('removeInputsFlag');
-
       if (exists) {
         document.getElementById('inputs').removeChild(exists);
       } else {
         var div = document.createElement("div");
         div.setAttribute('id', "removeInputsFlag");
         document.getElementById('inputs').appendChild(div);
-
         var f = document.createElement("form");
-
         var i = document.createElement("input");
         i.setAttribute('type', "text");
         i.setAttribute('name', "alpha");
-
+        i.setAttribute('value', a);
         f.appendChild(i);
-
         document.getElementById('removeInputsFlag').appendChild(f);
-
-
         var submit = document.createElement("BUTTON");
         var tSumbit = document.createTextNode("Submit");
         submit.setAttribute('type', "submit");
         submit.appendChild(tSumbit);
         document.getElementById('removeInputsFlag').appendChild(submit);
-
         submit.addEventListener("click", function() {
           if (id == 'rotation') {
             currentMatrix = matrixMultiply(makeRotation(i.value), currentMatrix);
+            consequentMatrices[num] = currentMatrix;
+            for (let i = num + 1; i < consequentMatrices.length; i++) {
+              consequentMatrices[i] = matrixMultiply(makeRotation(parseInt(consequentTransformations[i][1])), currentMatrix);
+              currentMatrix = consequentMatrices[i];
+            }
+            /* consequentTransformations.push([id, [i.value]]);
+            consequentMatrices.push(currentMatrix); */
+
+            clearViewB();
+
+            for (let vec = 0; vec < sequence.length; vec++) {
+              drawVector(imgB, multiply(currentMatrix, sequence[vec]));
+            }
+
+
+
+          }
+        });
+      }
+    }
+
+    function showXYFields(id) {
+      var exists = document.getElementById('removeInputsFlag');
+      if (exists) {
+        document.getElementById('inputs').removeChild(exists);
+      } else {
+        var div = document.createElement("div");
+        div.setAttribute('id', "removeInputsFlag");
+        document.getElementById('inputs').appendChild(div);
+        var f = document.createElement("form");
+        var iX = document.createElement("input");
+        iX.setAttribute('type', "text");
+        iX.setAttribute('name', "X");
+        iX.setAttribute('value', 0);
+        var iY = document.createElement("input");
+        iY.setAttribute('type', "text");
+        iY.setAttribute('name', "Y");
+        iY.setAttribute('value', 0);
+        f.appendChild(iX);
+        f.appendChild(iY);
+        document.getElementById('removeInputsFlag').appendChild(f);
+        var submit = document.createElement("BUTTON");
+        var tSumbit = document.createTextNode("Submit");
+        submit.setAttribute('id', "submit");
+        submit.appendChild(tSumbit);
+        document.getElementById('removeInputsFlag').appendChild(submit);
+        submit.addEventListener("click", function(e) {
+          if (id == 'translate') {
+            currentMatrix = matrixMultiply(makeTranslate(iX.value, iY.value), currentMatrix);
+          } else if (id == 'scale') {
+            currentMatrix = matrixMultiply(makeScaling(iX.value, iY.value), currentMatrix);
+          } else if (id == 'shear') {
+            currentMatrix = matrixMultiply(makeShear(iX.value, iY.value), currentMatrix);
           }
 
-					consequentTransformations.push([id, [i.value]]);
-					consequentMatrices.push(currentMatrix);
-          
+          consequentTransformations.push([id, [iX.value, iY.value]]);
+          consequentMatrices.push(currentMatrix);
+
           clearViewB();
-          
           for (let vec = 0; vec < sequence.length; vec++) {
             drawVector(imgB, multiply(currentMatrix, sequence[vec]));
           }
 
         });
+        //return [iX.value, iY.value];
       }
 
     }
 
-    function apply() {
+    function showAlphaFields(id) {
+      var exists = document.getElementById('removeInputsFlag');
+      if (exists) {
+        document.getElementById('inputs').removeChild(exists);
+      } else {
+        var div = document.createElement("div");
+        div.setAttribute('id', "removeInputsFlag");
+        document.getElementById('inputs').appendChild(div);
+        var f = document.createElement("form");
+        var i = document.createElement("input");
+        i.setAttribute('type', "text");
+        i.setAttribute('name', "alpha");
+        i.setAttribute('value', 0);
+        f.appendChild(i);
+        document.getElementById('removeInputsFlag').appendChild(f);
+        var submit = document.createElement("BUTTON");
+        var tSumbit = document.createTextNode("Submit");
+        submit.setAttribute('type', "submit");
+        submit.appendChild(tSumbit);
+        document.getElementById('removeInputsFlag').appendChild(submit);
+        submit.addEventListener("click", function() {
+          if (id == 'rotation') {
+            currentMatrix = matrixMultiply(makeRotation(i.value), currentMatrix);
+          }
+          consequentTransformations.push([id, [i.value]]);
+          consequentMatrices.push(currentMatrix);
 
+          clearViewB();
+
+          for (let vec = 0; vec < sequence.length; vec++) {
+            drawVector(imgB, multiply(currentMatrix, sequence[vec]));
+          }
+        });
+      }
+    }
+
+    function apply() {
       var existsMatrices = document.getElementById('removeMatricesFlag');
       var existsInputs = document.getElementById('removeInputsFlag');
-
       if (existsMatrices) {
         if (existsInputs) document.getElementById('inputs').removeChild(existsInputs);
         document.getElementById('matrices').removeChild(existsMatrices);
@@ -401,37 +402,31 @@
         var div = document.createElement("div");
         div.setAttribute('id', "removeMatricesFlag");
         document.getElementById('matrices').appendChild(div);
-
         var identity = document.createElement("BUTTON");
         var translate = document.createElement("BUTTON");
         var scale = document.createElement("BUTTON");
         var rotation = document.createElement("BUTTON");
         var shear = document.createElement("BUTTON");
-
         var tShear = document.createTextNode("Shear");
         var tRotation = document.createTextNode("Rotation");
         var tScale = document.createTextNode("Scale");
         var tTranslate = document.createTextNode("Translate");
         var tIdentity = document.createTextNode("Identity");
-
         identity.setAttribute('id', "identity");
         translate.setAttribute('id', "translate");
         scale.setAttribute('id', "scale");
         rotation.setAttribute('id', "rotation");
         shear.setAttribute('id', "shear");
-
         identity.setAttribute('onclick', "");
         translate.setAttribute('onclick', "showXYFields(this.id)");
         scale.setAttribute('onclick', "showXYFields(this.id)");
         rotation.setAttribute('onclick', "showAlphaFields(this.id)");
         shear.setAttribute('onclick', "showXYFields(this.id)");
-
         identity.appendChild(tIdentity);
         translate.appendChild(tTranslate);
         scale.appendChild(tScale);
         rotation.appendChild(tRotation);
         shear.appendChild(tShear);
-
         document.getElementById('removeMatricesFlag').appendChild(identity);
         document.getElementById('removeMatricesFlag').appendChild(translate);
         document.getElementById('removeMatricesFlag').appendChild(scale);
@@ -439,39 +434,42 @@
         document.getElementById('removeMatricesFlag').appendChild(shear);
       }
     }
-    
-    function editValues(i, idValuesTuple, previousMatrix, nextMatrix){
-    	// id, x, y
-      showXYFieldsEdit(i, idValuesTuple[0], parseInt(idValuesTuple[1][0]), parseInt(idValuesTuple[1][1]), previousMatrix);
+
+    function editValues(i, idValuesTuple, previousMatrix, nextMatrix) {
+      if (idValuesTuple[0] == "rotation")
+        //id, alpha
+        showAlphaFieldsEdit(i, idValuesTuple[0], parseInt(idValuesTuple[1]), previousMatrix);
+      else
+        // id, x, y
+        showXYFieldsEdit(i, idValuesTuple[0], parseInt(idValuesTuple[1][0]), parseInt(idValuesTuple[1][1]), previousMatrix);
+
     }
 
     function change() {
-    	var buttons = [];
+      var buttons = [];
       document.getElementById('removeMatricesFlag').innerHTML += "<br><br>";
-      
-			for (let i = 0; i < consequentMatrices.length; i++) {
-          
-          let button = document.createElement("BUTTON");
-          let text = document.createTextNode(consequentTransformations[i][0]);
-          button.addEventListener('click', function(){
-    				if(i > 0){
-            	editValues(i, consequentTransformations[i], consequentMatrices[i-1], consequentMatrices[i]);
-            } else {
-            	editValues(i, consequentTransformations[i], makeIdentity(), consequentMatrices[i]);
-            }
-					});
-          button.appendChild(text);
-          document.getElementById('removeMatricesFlag').appendChild(button);
-          buttons.push(button);
-          
-          
+
+      for (let i = 0; i < consequentMatrices.length; i++) {
+
+        let button = document.createElement("BUTTON");
+        let text = document.createTextNode(consequentTransformations[i][0]);
+        button.addEventListener('click', function() {
+          if (i > 0) {
+            editValues(i, consequentTransformations[i], consequentMatrices[i - 1], consequentMatrices[i]);
+          } else {
+            editValues(i, consequentTransformations[i], makeIdentity(), consequentMatrices[i]);
+          }
+        });
+        button.appendChild(text);
+        document.getElementById('removeMatricesFlag').appendChild(button);
+        buttons.push(button);
+
+
       }
-      
-      
+
+
     }
 
   </script>
 </body>
-
-
 
